@@ -1,200 +1,414 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" data-theme="cyber">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>Alby TOMY[cse_KID] </title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-
-  <!--linking the fontawsom-->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alby Tomy - Freelance Software Engineer | Backend, AI, Cloud</title>
+<script>
+(() => {
+  try {
+    const saved = localStorage.getItem("portfolio-theme");
+    if (saved && ["light", "dark", "cyber"].includes(saved)) {
+      document.documentElement.setAttribute("data-theme", saved);
+    } else {
+      document.documentElement.setAttribute("data-theme", "cyber");
+    }
+  } catch (_error) {
+    document.documentElement.setAttribute("data-theme", "cyber");
+  }
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!---- NAv Bar-->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Alby TOMY</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#linktohome">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#skills">My Skills</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#works">My Works</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#contact">Contact Me</a>
-          </li>
-        </ul>
-      </div>
+<div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
+<header class="site-header">
+  <div class="container nav-wrap">
+    <a class="brand" href="#hero"><span>AT</span> Alby Tomy</a>
+    <div class="theme-switcher" role="group" aria-label="Theme switcher">
+      <button type="button" class="theme-btn" data-theme-btn="light" aria-pressed="false">Light</button>
+      <button type="button" class="theme-btn" data-theme-btn="dark" aria-pressed="false">Dark</button>
+      <button type="button" class="theme-btn is-active" data-theme-btn="cyber" aria-pressed="true">Cyber</button>
     </div>
-  </nav>
-
-
-  <main class="container mt-5">
-    <section id="linktohome" class="d-flex justify-content-sm-center justify-content-md-evenly align-items-center 
-    flex-column-reverse gap-3 flex-md-row">
-    <!---Hero----->
-    <div class="d-flex justify-content-sm-center align-items-center flex-column flex-md-column
-    justify-content-md-start align-items-md-start">
-    
-    <h5>Hi 👋</h5>
-    <h1>I'm Alby TOMY</h1>
-      <h2>CSE student</h2>
-    <button class="btn btn-primary btn-sm">My Cool Resume</button>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">Menu</button>
+    <nav class="nav-links" id="nav-links">
+      <a href="#services">Services</a>
+      <a href="#about">Why Me</a>
+      <a href="#skills">Stack</a>
+      <a href="#experience">Work</a>
+      <a href="#contact">Contact</a>
+      <a href="#contact" class="nav-cta">Start Project</a>
+    </nav>
   </div>
+</header>
 
-  <div class="d-md-none w-50 w-50">
-    <img src="image/ProfilePhoto (1).jpg"alt="Alby TOMY" class="w-100 h-100 rounded-circle shadow">
-  </div>
-  <div  class="d-none d-md-block w-25 h-25">
-    <img src="image/ProfilePhoto (1).jpg"alt="Alby TOMY" class="w-100 h-100 rounded-circle shadow">
+<main>
+  <section id="hero" class="section hero">
+    <div class="container hero-grid">
+      <div class="hero-copy reveal">
+        <p class="eyebrow">Freelance Software Engineer</p>
+        <h1>Reliable backend systems and practical AI capabilities for product teams.</h1>
+        <p class="hero-lead">
+          I help startups and product teams build scalable APIs, AI-assisted workflows, and cloud-ready services.
+          You get structured execution, clear communication, and production-minded implementation.
+        </p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn btn-primary">Start a Project</a>
+          <a href="#services" class="btn btn-ghost">View Services</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-card"><strong>4+</strong><span>Years Building</span></div>
+          <div class="stat-card"><strong>Backend + AI</strong><span>Core Focus</span></div>
+          <div class="stat-card"><strong>Enterprise</strong><span>Delivery Experience</span></div>
+          <div class="stat-card"><strong>E2E</strong><span>Architecture to Launch</span></div>
+        </div>
+      </div>
 
+      <aside class="hero-profile reveal tilt-card" data-tilt data-tilt-strength="8">
+        <div class="avatar-scene" aria-hidden="true">
+          <div class="avatar-glow"></div>
+          <div class="avatar-ring"></div>
+          <div class="avatar-base">
+            <span class="code-chip chip-a">&lt;/&gt;</span>
+            <span class="code-chip chip-b">JS</span>
+            <span class="code-chip chip-c">AI</span>
+
+            <div class="hello-bubble">
+              Hey, welcome <span class="wave-text">&#128075;</span>
+            </div>
+
+            <div class="developer-avatar">
+              <div class="hood-back"></div>
+              <div class="torso"></div>
+              <div class="hood-front"></div>
+              <div class="face">
+                <span class="hair"></span>
+                <span class="hair h2"></span>
+                <span class="hair h3"></span>
+                <span class="brow left"></span>
+                <span class="brow right"></span>
+                <span class="eye left"></span>
+                <span class="eye right"></span>
+                <span class="nose"></span>
+                <span class="smile"></span>
+              </div>
+              <div class="arm left"></div>
+              <div class="arm right wave"></div>
+              <div class="hands">
+                <span class="hand left"></span>
+                <span class="hand right"></span>
+              </div>
+              <div class="laptop"><span class="laptop-logo"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="profile-body">
+          <h2>Alby Tomy</h2>
+          <p>Bengaluru, India</p>
+          <ul class="profile-list">
+            <li><span>Role</span><strong>Freelance Engineer</strong></li>
+            <li><span>Specialization</span><strong>Backend, Frontend Integration, AI, Cloud, Security</strong></li>
+            <li><span>Availability</span><strong>Open for New Projects</strong></li>
+            <li><span>Engagement</span><strong>Fixed Scope / Ongoing</strong></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
   </section>
 
-  <section id="skills" class="mt-7 p-2 float-left">
-    <!--my skills-->
-    <h1 class="text-primary text-center">My Skill Set</h1>
-    <div class="mt-4 d-md-none d-flex justify-content-evenly float-left">
+  <section id="services" class="section services-section">
+    <div class="services-bg" aria-hidden="true">
+      <span class="bg-orb orb-one"></span>
+      <span class="bg-orb orb-two"></span>
+      <span class="bg-grid"></span>
+    </div>
 
-          <!-- <div>
-            icon
-            text
-            </div>
-          -->
+    <div class="container">
+      <div class="section-head section-head-wide reveal">
+        <div>
+          <p class="eyebrow">Services</p>
+          <h2>Services aligned with my proven delivery stack</h2>
+        </div>
+        <p class="section-head-note">
+          Each service below reflects work I have already done in real projects:
+          backend systems, AI integration, frontend integration support, cloud delivery, and security hygiene.
+        </p>
+      </div>
 
-          <i class="fab fa-html5 fa-5x" style="color: #f4470b;"></i>
-          <i class="fab fa-css3-alt fa-5x text-primary"></i>
-          <i class="fab fa-bootstrap fa-5x" style="color: #730fef;"></i>
-          <i class="fab fa-python fa-5x text-primary"></i>
+      <div class="services-grid">
+        <article class="service-card reveal tilt-card" data-tilt data-tilt-strength="11">
+          <div class="service-meta">
+            <span class="service-icon" aria-hidden="true">&#9889;</span>
+            <span class="service-no">01</span>
           </div>
-          <div class="mt-4 d-md-none d-flex justify-content-evenly float-left">
-            <i class="fab fa-cuttlefish fa-5x text-dark"></i>
-            <i class="fab fa-js fa-5x text-dark"></i>
-            <i class="fab fa-java fa-5x text-primary"></i>
-            <i class="fab fa- php fa-5x text-dark"></i>
-            </div>
+          <h3>Backend API Development</h3>
+          <p>Design and build secure backend services using Python, FastAPI, Django, and Django REST Framework.</p>
+          <div class="service-points">
+            <span>REST API Design</span><span>Authentication</span><span>Pytest Testing</span>
+          </div>
+          <a href="#contact" class="service-link" data-subject="Backend API Development">Build Backend APIs</a>
+        </article>
+
+        <article class="service-card reveal tilt-card" data-tilt data-tilt-strength="11">
+          <div class="service-meta">
+            <span class="service-icon" aria-hidden="true">&#129302;</span>
+            <span class="service-no">02</span>
+          </div>
+          <h3>AI and RAG Integration</h3>
+          <p>Integrate practical LLM workflows with LangChain, OpenAI API, and ChromaDB for internal or product use cases.</p>
+          <div class="service-points">
+            <span>RAG Pipelines</span><span>Prompt Workflows</span><span>Evaluation</span>
+          </div>
+          <a href="#contact" class="service-link" data-subject="AI and RAG Integration">Add AI Workflows</a>
+        </article>
+
+        <article class="service-card reveal tilt-card" data-tilt data-tilt-strength="11">
+          <div class="service-meta">
+            <span class="service-icon" aria-hidden="true">&#128640;</span>
+            <span class="service-no">03</span>
+          </div>
+          <h3>Performance and Caching Optimization</h3>
+          <p>Improve response time and stability by applying Redis caching, bottleneck fixes, and reliability improvements.</p>
+          <div class="service-points">
+            <span>Redis Caching</span><span>Latency Reduction</span><span>Service Stability</span>
+          </div>
+          <a href="#contact" class="service-link" data-subject="Performance and Caching Optimization">Optimize My Services</a>
+        </article>
+
+        <article class="service-card reveal tilt-card" data-tilt data-tilt-strength="11">
+          <div class="service-meta">
+            <span class="service-icon" aria-hidden="true">&#9729;</span>
+            <span class="service-no">04</span>
+          </div>
+          <h3>Cloud Deployment and CI/CD Support</h3>
+          <p>Prepare applications for cloud rollout with Docker-based deployment flows and CI/CD support on AWS environments.</p>
+          <div class="service-points">
+            <span>Docker</span><span>AWS</span><span>Jenkins/Ansible</span>
+          </div>
+          <a href="#contact" class="service-link" data-subject="Cloud Deployment and CI/CD Support">Deploy to Cloud</a>
+        </article>
+
+        <article class="service-card reveal tilt-card" data-tilt data-tilt-strength="11">
+          <div class="service-meta">
+            <span class="service-icon" aria-hidden="true">&#128202;</span>
+            <span class="service-no">05</span>
+          </div>
+          <h3>Frontend Integration Support</h3>
+          <p>Support frontend implementation with React.js and Flutter for API-connected pages, forms, and business workflows.</p>
+          <div class="service-points">
+            <span>React.js</span><span>Flutter</span><span>API Integration</span>
+          </div>
+          <a href="#contact" class="service-link" data-subject="Frontend Integration Support">Build Product UI</a>
+        </article>
+
+        <article class="service-card reveal tilt-card" data-tilt data-tilt-strength="11">
+          <div class="service-meta">
+            <span class="service-icon" aria-hidden="true">&#129309;</span>
+            <span class="service-no">06</span>
+          </div>
+          <h3>Security and System Hygiene</h3>
+          <p>Apply practical security checks and safer implementation patterns across applications and supporting infrastructure.</p>
+          <div class="service-points">
+            <span>Vulnerability Scanning</span><span>Network Diagnostics</span><span>Secure Config Review</span>
+          </div>
+          <a href="#contact" class="service-link" data-subject="Security and System Hygiene">Improve Security Posture</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="section section-muted">
+    <div class="container about-grid">
+      <div class="about-copy reveal">
+        <p class="eyebrow">Why Me</p>
+        <h2>Freelancer speed with engineering discipline</h2>
+        <p>
+          I work with founders, agencies, and product teams that need dependable engineering execution
+          without long hiring cycles. I can step in for greenfield builds, feature sprints,
+          and stabilization of existing backend services.
+        </p>
+        <p>
+          My background spans backend engineering, AI/RAG workflows, frontend integration, and cloud operations.
+          I focus on business outcomes, realistic milestones, and consistent delivery.
+        </p>
+      </div>
+
+      <div class="process-card reveal">
+        <h3>How I work</h3>
+        <ol>
+          <li><span>01</span><div><strong>Discovery and scope</strong><p>Understand goals, constraints, and user impact before implementation.</p></div></li>
+          <li><span>02</span><div><strong>Milestone delivery</strong><p>Ship in clear weekly checkpoints so progress is visible and reviewable.</p></div></li>
+          <li><span>03</span><div><strong>Hardening and launch</strong><p>Test critical flows, improve reliability, and prepare deployment safely.</p></div></li>
+          <li><span>04</span><div><strong>Handover and support</strong><p>Provide documentation and post-launch support for smooth ownership transfer.</p></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills" class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Technical Stack</p>
+        <h2>Stack I actively use in delivery</h2>
+        <p class="stack-intro">Grouped by real usage in projects, not by trend keywords.</p>
+      </div>
+
+      <div class="stack-summary reveal">
+        <div class="stack-pill">
+          <span>Core Backend</span>
+          <strong>Python, FastAPI, Django, PostgreSQL, Redis</strong>
         </div>
-        <div class="mt-4 d-none d-md-flex justify-content-evenly">
-          <i class="fab fa-html5 fa-7x" style="color: #f4470b;"></i>
-          <i class="fab fa-css3-alt fa-7x text-primary"></i>
-          <i class="fab fa-bootstrap fa-7x" style="color: #730fef;"></i>
-          <i class="fab fa-python fa-7x text-primary"></i>
-          <i class="fab fa-cuttlefish fa-7x text-dark"></i>
-          <i class="fab fa-js fa-7x text-dark"></i>
-          <i class="fab fa-java fa-7x text-primary"></i>
-          <i class="fab fa-php fa-7x text-dark"></i>
+        <div class="stack-pill">
+          <span>AI and Retrieval</span>
+          <strong>OpenAI API, LangChain, RAG, ChromaDB, MCP</strong>
         </div>
-      </section>
+        <div class="stack-pill">
+          <span>Delivery and Ops</span>
+          <strong>AWS, Docker, Jenkins, Ansible, Pytest</strong>
+        </div>
+      </div>
 
-      <section id="works" class="mt-4 p-4">
-        <!-----my works--->
-        <h1 class="text-primary text-center">Qualification</h1>
-        <h5 style = "text-align:  center"> The Source is restricted to view </h5>
-        <div class="d-flex flex-column flex-md-row justify-content-md-evenly gap-3">
-          <div class="card mb-2">
-            <img src="https://images.unsplash.com/photo-1454165205744-3b78555e5572?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">Full Stack Developer</h5>
-              <p class="card-text">*3 major project<br>*2 team project</p>
-              <div style="padding-bottom: 3px;">
-              <a  href="#" class="btn btn-dark ">View Source
-                <i class="fab fa-github"></i></a>
-              </div>
-              </div>
-            </div>
-            <div class="card mb-2">
-              <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=702&q=80" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">Data Science</h5>
-                <p class="card-text">*Done Intern through online for <br>MNCs</p>
-                <a style="margin-bottom: 3px;" href="#" class="btn btn-dark">View Source
-                  <i class="fab fa-github"></i></a>
-                </div>
-              </div>
-              <div class="card mb-2">
-                <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Ethical Hacker</h5>
-                  <p class="card-text">*Hired by 2 leading MNCs (restricted to reveal)<br>*Certified by Alison<br>*prepairing for CEH</p>
-                  <a href="#" class="btn btn-dark">View Source
-                    <i class="fab fa-github"></i></a>
-                  </div>
-                </div>
-                <div class="card mb-2">
-                  <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=750&q=80" alt="...">
-                  <div class="card-body">
-                    <h5 class="card-title">Network Engineer</h5>
-                    <p class="card-text">*Intermediate level<br>*CISCO beginer certified</p>
-                    <a href="#" class="btn btn-dark">View Source
-                      <i class="fab fa-github"></i></a>
-                    </div>
-                  </div>
-                  <div class="card mb-2">
-                    <img src="https://images.unsplash.com/photo-1457305237443-44c3d5a30b89?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=753&q=80" alt="...">
-                    <div class="card-body">
-                      <h5 class="card-title">Cyber Security</h5>
-                      <p class="card-text">*Certified by Cyberary<br>*Alison</p>
-                      <a href="#" class="btn btn-dark">View Source
-                        <i class="fab fa-github"></i></a>
-                      </div>
-                    </div>
-                    <div class="card mb-2">
-                      <img src="https://images.unsplash.com/photo-1593349480506-8433634cdcbe?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80" alt="...">
-                      <div class="card-body">
-                        <h5 class="card-title">AI & Machine Learning</h5>
-                        <p class="card-text">*Intermediate level</p>
-                        <a href="#" class="btn btn-dark">View Source
-                          <i class="fab fa-github"></i></a>
-                        </div>
-                      </div>
-                    </div>
-                  </section>
+      <div class="skills-grid">
+        <article class="skill-group reveal">
+          <h3>Backend and APIs</h3>
+          <p class="skill-note">Primary delivery layer for product and platform services.</p>
+          <div class="chip-row">
+            <span>Python</span><span>FastAPI</span><span>Django</span><span>DRF</span><span>Flask</span><span>REST APIs</span><span>JWT</span><span>Microservices</span>
+          </div>
+        </article>
 
-                  <section id="contact" class="mt-4 py-4">
-                   <!-----my contacts----->
-                   <h1 class="text-primary text-center">Contact Form</h1>
-                   <div class="row">
-                    <div class="col-sm col-md-8">
-                     <form>
-                      <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                        <input type="email" required class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
-                      </div>
-                      <div class="mb-3">
-                        <label for="exampleFormControlTextarea1" class="form-label">Your Message</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1"required placeholder="Enter your message" rows="3"></textarea>
-                      </div>
-                      <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                  </div>
-                  <div class="col-sm col-md-4">
-                    <div class="mt-3">
+        <article class="skill-group reveal">
+          <h3>AI and Retrieval</h3>
+          <p class="skill-note">Production-focused LLM integration and retrieval workflows.</p>
+          <div class="chip-row">
+            <span>OpenAI API</span><span>LangChain</span><span>RAG</span><span>ChromaDB</span><span>Evaluation</span><span>Prompt Engineering</span><span>MCP</span>
+          </div>
+        </article>
 
-                      <h3><i class="fas fa-at text-primary"></i>qazrapped.at@gmail.com</h3>
-                      <h4>Mob.no : #####32789</h4>
-                      <h5>click the below icon</h5>
-                      <button type="button" class="btn btn-link "></button>
-                      <a href="https://geekprank.com/hacker/"><i class="fab fa-github fa-5x"></i></a>
-                    </div>
-                  </d iv>
+        <article class="skill-group reveal">
+          <h3>Databases and Caching</h3>
+          <p class="skill-note">Persistent storage, query optimization, and high-throughput access.</p>
+          <div class="chip-row">
+            <span>PostgreSQL</span><span>Redis</span><span>MongoDB</span><span>MySQL</span><span>SQL</span><span>Caching Strategies</span>
+          </div>
+        </article>
 
+        <article class="skill-group reveal">
+          <h3>Cloud and Delivery</h3>
+          <p class="skill-note">Deployment workflows, release confidence, and operational readiness.</p>
+          <div class="chip-row">
+            <span>Docker</span><span>AWS</span><span>Jenkins</span><span>Ansible</span><span>Pytest</span><span>Git</span><span>GitHub</span><span>CI/CD</span>
+          </div>
+        </article>
 
-                </section>
+        <article class="skill-group reveal">
+          <h3>Frontend and App</h3>
+          <p class="skill-note">API-connected UI implementation and feature integration support.</p>
+          <div class="chip-row">
+            <span>React.js</span><span>Flutter</span><span>JavaScript</span><span>Responsive UI</span><span>API Integration</span><span>HTML5</span><span>CSS</span>
+          </div>
+        </article>
 
+        <article class="skill-group reveal">
+          <h3>Data and ML Tooling</h3>
+          <p class="skill-note">Data processing and model experimentation utilities.</p>
+          <div class="chip-row">
+            <span>Pandas</span><span>NumPy</span><span>Scikit-learn</span><span>TensorFlow</span><span>Matplotlib</span>
+          </div>
+        </article>
 
-              </main>
+        <article class="skill-group reveal">
+          <h3>Security and Systems</h3>
+          <p class="skill-note">Practical security diagnostics and Linux infrastructure exposure.</p>
+          <div class="chip-row">
+            <span>Wireshark</span><span>Burp Suite</span><span>Metasploit</span><span>Nmap</span><span>Vulnerability Scanning</span><span>RHEL</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
 
+  <section id="experience" class="section section-muted">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Selected Work</p>
+        <h2>Recent delivery highlights</h2>
+      </div>
 
+      <div class="work-grid">
+        <article class="work-card reveal tilt-card" data-tilt data-tilt-strength="7">
+          <p class="work-meta">2025 - 2026</p>
+          <h3>Pricing Microservice for Global E-commerce</h3>
+          <p>Built and owned a FastAPI pricing service with caching and test coverage for enterprise-scale product flows.</p>
+          <div class="work-tags"><span>FastAPI</span><span>Redis</span><span>PostgreSQL</span><span>AWS</span></div>
+        </article>
 
-              <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-            </body>
-            </html>
+        <article class="work-card reveal tilt-card" data-tilt data-tilt-strength="7">
+          <p class="work-meta">Personal Project</p>
+          <h3>CodeMind AI - Codebase Assistant</h3>
+          <p>Built an AI assistant that combines RAG retrieval with MCP tool calls to answer developer questions using both indexed code context and live Git data such as commits, branches, and repository history.</p>
+          <div class="work-tags"><span>Python</span><span>LangChain</span><span>OpenAI API</span><span>ChromaDB</span><span>MCP</span><span>GitHub Data</span><span>Streamlit</span></div>
+        </article>
+
+        <article class="work-card reveal tilt-card" data-tilt data-tilt-strength="7">
+          <p class="work-meta">Career Foundation</p>
+          <h3>System Administration and Cybersecurity Practice</h3>
+          <p>Worked on Linux server operations, AWS infrastructure support, and practical security tasks including vulnerability scanning and network diagnostics.</p>
+          <div class="work-tags"><span>RHEL</span><span>AWS</span><span>Ansible</span><span>Wireshark</span><span>Nmap</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="section">
+    <div class="container contact-grid">
+      <div class="contact-copy reveal">
+        <p class="eyebrow">Contact</p>
+        <h2>Tell me about your project</h2>
+        <p>
+          Share your scope, timeline, and current blockers. I will reply with a practical plan,
+          estimated engagement model, and next steps.
+        </p>
+
+        <div class="contact-list">
+          <a href="https://mail.google.com/mail/?view=cm&fs=1&to=alby.u.tomy@gmail.com" target="_blank" rel="noreferrer">alby.u.tomy@gmail.com</a>
+          <a href="https://linkedin.com/in/alby-tomy" target="_blank" rel="noreferrer">linkedin.com/in/alby-tomy</a>
+          <a href="https://github.com/alby-tomy" target="_blank" rel="noreferrer">github.com/alby-tomy</a>
+          <span>Bengaluru, Karnataka, India</span>
+        </div>
+      </div>
+
+      <form class="contact-form reveal" onsubmit="sendMail(event);">
+        <label for="f-name">Name</label>
+        <input id="f-name" name="name" type="text" placeholder="Your name" required>
+
+        <label for="f-email">Email</label>
+        <input id="f-email" name="email" type="email" placeholder="you@company.com" required>
+
+        <label for="f-subject">Subject</label>
+        <input id="f-subject" name="subject" type="text" placeholder="Project support request" required>
+
+        <label for="f-msg">Project brief</label>
+        <textarea id="f-msg" name="message" placeholder="What are you building, what is blocked, and what timeline do you have?" required></textarea>
+
+        <div class="form-status" id="form-status" aria-live="polite"></div>
+        <button type="submit" class="btn btn-primary" id="btn-send">Send Project Details</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-wrap">
+    <p>&copy; 2026 Alby Tomy</p>
+    <p>Freelance software engineering for backend, AI, and cloud products</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
