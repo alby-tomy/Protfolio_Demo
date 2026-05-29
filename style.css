@@ -1648,6 +1648,144 @@ h1 {
   align-items: start;
 }
 
+.contact-visual {
+  margin: 18px 0 18px;
+  position: relative;
+  min-height: 248px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 78%, rgba(0, 190, 255, 0.2), transparent 48%),
+    radial-gradient(circle at 50% 20%, rgba(0, 114, 201, 0.25), transparent 60%),
+    linear-gradient(170deg, rgba(9, 22, 42, 0.96), rgba(10, 18, 35, 0.94));
+  box-shadow: inset 0 -26px 40px rgba(0, 0, 0, 0.34);
+}
+
+.contact-visual-glow {
+  position: absolute;
+  inset: 10px;
+  border-radius: 14px;
+  background: radial-gradient(circle at center, rgba(0, 245, 255, 0.22), transparent 68%);
+  filter: blur(10px);
+  animation: pulseGlow 3.6s ease-in-out infinite;
+}
+
+.contact-visual-ring {
+  position: absolute;
+  width: 188px;
+  height: 188px;
+  border-radius: 50%;
+  border: 1px dashed rgba(0, 245, 255, 0.44);
+  left: calc(50% - 94px);
+  top: 20px;
+  animation: ringSpin 14s linear infinite;
+}
+
+.contact-visual-frame {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  width: min(66%, 258px);
+  height: 214px;
+  transform: translateX(-50%);
+  border-radius: 14px;
+  padding: 0;
+  border: 1px solid rgba(0, 245, 255, 0.34);
+  background:
+    radial-gradient(circle at 50% 82%, rgba(0, 190, 255, 0.2), transparent 52%),
+    linear-gradient(170deg, rgba(7, 22, 42, 0.92), rgba(8, 18, 34, 0.9));
+  box-shadow:
+    0 18px 30px rgba(0, 6, 16, 0.5),
+    0 0 20px rgba(0, 190, 255, 0.22);
+  animation: contactAvatarFloat 4.8s ease-in-out infinite;
+  overflow: hidden;
+}
+
+.contact-visual-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.contact-avatar {
+  --contact-avatar-scale: 0.86;
+  left: 50%;
+  bottom: -6px;
+  width: 210px;
+  height: 238px;
+  transform: translateX(-50%) scale(var(--contact-avatar-scale));
+  transform-origin: bottom center;
+  animation: contactAvatarBob 3.8s ease-in-out infinite;
+}
+
+.contact-avatar .face {
+  top: 48px;
+}
+
+.contact-avatar .laptop {
+  width: 160px;
+  height: 86px;
+  left: calc(50% - 80px);
+  bottom: -4px;
+}
+
+.contact-avatar .laptop::after {
+  width: 176px;
+  left: calc(50% - 88px);
+}
+
+.contact-avatar .arm.left {
+  top: 132px;
+}
+
+.contact-avatar .arm.right {
+  top: 122px;
+}
+
+.contact-avatar .hands {
+  top: 148px;
+}
+
+.contact-tech-chip {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: -moz-fit-content;
+  width: fit-content;
+  z-index: 2;
+  font-family: "Sora", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #a6ecff;
+  background: rgba(6, 22, 42, 0.85);
+  border: 1px solid rgba(0, 245, 255, 0.3);
+  border-radius: 999px;
+  padding: 4px 10px;
+  box-shadow: 0 0 10px rgba(0, 245, 255, 0.16);
+}
+
+.contact-tech-chip.contact-chip-api {
+  left: 16px;
+  top: 14px;
+  animation: contactChipDriftA 4.2s ease-in-out infinite;
+}
+
+.contact-tech-chip.contact-chip-rag {
+  right: 16px;
+  top: 14px;
+  animation: contactChipDriftB 4.6s ease-in-out infinite;
+}
+
+.contact-tech-chip.contact-chip-cloud {
+  left: 16px;
+  bottom: 16px;
+  animation: contactChipDriftA 5s ease-in-out infinite reverse;
+}
+
 .contact-list {
   display: grid;
   gap: 9px;
@@ -1885,6 +2023,20 @@ h1 {
     padding: 22px;
   }
 
+  .contact-visual {
+    min-height: 230px;
+  }
+
+  .contact-visual-frame {
+    width: min(72%, 232px);
+    height: 196px;
+  }
+
+  .contact-avatar {
+    --contact-avatar-scale: 0.78;
+    bottom: -10px;
+  }
+
   .profile-list li {
     grid-template-columns: 1fr;
     row-gap: 2px;
@@ -1932,6 +2084,11 @@ h1 {
   .contact-list a,
   .contact-list span {
     overflow-wrap: anywhere;
+  }
+
+  .contact-tech-chip {
+    font-size: 0.66rem;
+    padding: 4px 8px;
   }
 }
 
@@ -2120,6 +2277,54 @@ h1 {
 }
 
 @keyframes floatChipB {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(7px);
+  }
+}
+
+@keyframes contactAvatarFloat {
+
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(-7px);
+  }
+}
+
+@keyframes contactAvatarBob {
+
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0) scale(var(--contact-avatar-scale, 0.86));
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(-6px) scale(var(--contact-avatar-scale, 0.86));
+  }
+}
+
+@keyframes contactChipDriftA {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@keyframes contactChipDriftB {
 
   0%,
   100% {
