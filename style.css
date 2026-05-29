@@ -1737,15 +1737,56 @@ h1 {
 }
 
 .contact-avatar .arm.left {
+  left: 24px;
   top: 132px;
+  transform: rotate(12deg);
+  z-index: 6;
+  animation: contactTypingLeftArm 3.2s ease-in-out infinite;
 }
 
 .contact-avatar .arm.right {
-  top: 122px;
+  right: 24px;
+  top: 132px;
+  transform: rotate(-12deg);
+  z-index: 6;
+}
+
+.contact-avatar .arm.right.wave {
+  transform-origin: 12px 9px;
+  animation: contactTypingRightArm 2.8s ease-in-out infinite;
 }
 
 .contact-avatar .hands {
-  top: 148px;
+  top: 146px;
+  z-index: 8;
+}
+
+.contact-avatar .hand {
+  width: 24px;
+  height: 13px;
+  border-radius: 10px 10px 12px 12px;
+  box-shadow: inset 0 -1px 0 rgba(168, 95, 40, 0.2);
+}
+
+.contact-avatar .hand::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  bottom: 2px;
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(166, 90, 38, 0.38);
+}
+
+.contact-avatar .hand.left {
+  left: 36px;
+  transform: rotate(10deg);
+}
+
+.contact-avatar .hand.right {
+  right: 36px;
+  transform: rotate(-10deg);
 }
 
 .contact-tech-chip {
@@ -2333,5 +2374,37 @@ h1 {
 
   50% {
     transform: translateY(7px);
+  }
+}
+
+@keyframes contactTypingLeftArm {
+
+  0%,
+  100% {
+    transform: rotate(12deg) translateY(0);
+  }
+
+  45% {
+    transform: rotate(8deg) translateY(1px);
+  }
+
+  72% {
+    transform: rotate(14deg) translateY(-1px);
+  }
+}
+
+@keyframes contactTypingRightArm {
+
+  0%,
+  100% {
+    transform: rotate(-12deg) translateY(0);
+  }
+
+  34% {
+    transform: rotate(-7deg) translateY(1px);
+  }
+
+  68% {
+    transform: rotate(-14deg) translateY(-1px);
   }
 }
