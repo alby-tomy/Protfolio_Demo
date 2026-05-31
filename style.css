@@ -1916,6 +1916,10 @@ h1 {
   color: #b3422c;
 }
 
+.form-status.note {
+  color: var(--muted);
+}
+
 .form-status a {
   color: var(--accent-strong);
   font-weight: 700;

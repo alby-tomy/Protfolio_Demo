@@ -226,26 +226,31 @@ async function sendMail(event) {
     statusEl.className = type ? `form-status ${type}` : "form-status";
   };
 
-  const setStatusWithGmailFallback = (errorMessage) => {
+  const setStatusWithGmailFallback = (reasonMessage) => {
     const composeSubject = `Portfolio Inquiry: ${subject}`;
     const composeBody =
       `Name: ${name}\n` +
       `Email: ${email}\n\n` +
-      `${errorMessage}\n\n` +
+      `Submission fallback reason: ${reasonMessage}\n\n` +
       `Project brief:\n${messageEl.value.trim()}`;
     const gmailComposeUrl =
       `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(CONTACT_EMAIL)}` +
       `&su=${encodeURIComponent(composeSubject)}` +
       `&body=${encodeURIComponent(composeBody)}`;
 
-    statusEl.textContent = `${errorMessage} `;
+    const popup = window.open(gmailComposeUrl, "_blank", "noopener,noreferrer");
+
+    statusEl.textContent = popup
+      ? "Could not send automatically. Gmail draft opened in a new tab."
+      : "Could not send automatically. ";
+
     const link = document.createElement("a");
     link.href = gmailComposeUrl;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
-    link.textContent = "Open Gmail draft";
+    link.textContent = popup ? "Open Gmail draft again" : "Open Gmail draft";
     statusEl.appendChild(link);
-    statusEl.className = "form-status error";
+    statusEl.className = "form-status note";
   };
 
   const name = nameEl.value.trim();
