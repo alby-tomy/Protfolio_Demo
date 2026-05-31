@@ -226,31 +226,52 @@ async function sendMail(event) {
     statusEl.className = type ? `form-status ${type}` : "form-status";
   };
 
-  const setStatusWithGmailFallback = (reasonMessage) => {
-    const composeSubject = `Portfolio Inquiry: ${subject}`;
-    const composeBody =
-      `Name: ${name}\n` +
-      `Email: ${email}\n\n` +
-      `Submission fallback reason: ${reasonMessage}\n\n` +
-      `Project brief:\n${messageEl.value.trim()}`;
-    const gmailComposeUrl =
-      `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(CONTACT_EMAIL)}` +
-      `&su=${encodeURIComponent(composeSubject)}` +
-      `&body=${encodeURIComponent(composeBody)}`;
+  const submitViaHiddenFormTarget = (payload) => {
+    let iframe = null;
+    let form = null;
 
-    const popup = window.open(gmailComposeUrl, "_blank", "noopener,noreferrer");
+    try {
+      const iframeName = `contact-submit-${Date.now()}`;
+      iframe = document.createElement("iframe");
+      iframe.name = iframeName;
+      iframe.tabIndex = -1;
+      iframe.setAttribute("aria-hidden", "true");
+      iframe.style.display = "none";
 
-    statusEl.textContent = popup
-      ? "Could not send automatically. Gmail draft opened in a new tab."
-      : "Could not send automatically. ";
+      form = document.createElement("form");
+      form.method = "POST";
+      form.action = `https://formsubmit.co/${CONTACT_EMAIL}`;
+      form.target = iframeName;
+      form.style.display = "none";
 
-    const link = document.createElement("a");
-    link.href = gmailComposeUrl;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.textContent = popup ? "Open Gmail draft again" : "Open Gmail draft";
-    statusEl.appendChild(link);
-    statusEl.className = "form-status note";
+      const formPayload = {
+        ...payload,
+        _next: window.location.href.split("#")[0]
+      };
+
+      Object.entries(formPayload).forEach(([key, value]) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = String(value);
+        form.appendChild(input);
+      });
+
+      document.body.appendChild(iframe);
+      document.body.appendChild(form);
+      form.submit();
+
+      window.setTimeout(() => {
+        form?.remove();
+        iframe?.remove();
+      }, 2500);
+
+      return true;
+    } catch (_hiddenSubmitError) {
+      form?.remove();
+      iframe?.remove();
+      return false;
+    }
   };
 
   const name = nameEl.value.trim();
@@ -322,25 +343,37 @@ async function sendMail(event) {
       subjectEl.value = "";
       messageEl.value = "";
     } else {
-      const needsActivation = /activation/i.test(lastApiMessage);
-      const needsServer = /web server|browsed as html files|file:\/\//i.test(lastApiMessage);
+      const hiddenFormSubmitted = submitViaHiddenFormTarget(payload);
 
-      if (needsActivation) {
-        setStatusWithGmailFallback(
-          "Activation pending in FormSubmit. Check the activation mail and click 'Activate Form' from that email."
-        );
-      } else if (needsServer) {
-        setStatusWithGmailFallback(
-          "Submit from a hosted URL or local server URL (not file://)."
-        );
-      } else if (lastApiMessage) {
-        setStatusWithGmailFallback(lastApiMessage);
+      if (hiddenFormSubmitted) {
+        setStatus("Submitted from browser. I will get back to you soon.", "success");
+        nameEl.value = "";
+        emailEl.value = "";
+        subjectEl.value = "";
+        messageEl.value = "";
       } else {
-        setStatusWithGmailFallback("Could not send right now.");
+        const needsActivation = /activation/i.test(lastApiMessage);
+        const needsServer = /web server|browsed as html files|file:\/\//i.test(lastApiMessage);
+
+        if (needsActivation) {
+          setStatus(
+            "FormSubmit activation is pending. Open the activation email from FormSubmit and click 'Activate Form', then submit again.",
+            "error"
+          );
+        } else if (needsServer) {
+          setStatus(
+            "Use a hosted URL or local server URL (not file://), then submit again.",
+            "error"
+          );
+        } else if (lastApiMessage) {
+          setStatus(lastApiMessage, "error");
+        } else {
+          setStatus("Could not send right now. Please try again in a minute.", "error");
+        }
       }
     }
   } catch (_error) {
-    setStatusWithGmailFallback("Could not send right now.");
+    setStatus("Could not send right now. Please try again in a minute.", "error");
   } finally {
     sendBtn.disabled = false;
     sendBtn.textContent = previousBtnText;
