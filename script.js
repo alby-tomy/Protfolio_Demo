@@ -4,8 +4,11 @@ const root = document.documentElement;
 const themeButtons = document.querySelectorAll("[data-theme-btn]");
 const THEME_KEY = "portfolio-theme";
 const VALID_THEMES = new Set(["light", "dark", "cyber"]);
-const FORMSUBMIT_ENDPOINT =
-  "https://formsubmit.co/ajax/036b2b909bb3489467da6984534bbdc4";
+const CONTACT_EMAIL = "alby.u.tomy@gmail.com";
+const FORMSUBMIT_ENDPOINTS = [
+  "https://formsubmit.co/ajax/036b2b909bb3489467da6984534bbdc4",
+  `https://formsubmit.co/ajax/${CONTACT_EMAIL}`
+];
 
 function applyTheme(theme, persist = true) {
   const activeTheme = VALID_THEMES.has(theme) ? theme : "light";
@@ -218,81 +221,121 @@ async function sendMail(event) {
   const statusEl = document.getElementById("form-status");
   const sendBtn = document.getElementById("btn-send");
 
+  const setStatus = (message, type = "") => {
+    statusEl.textContent = message;
+    statusEl.className = type ? `form-status ${type}` : "form-status";
+  };
+
+  const setStatusWithGmailFallback = (errorMessage) => {
+    const composeSubject = `Portfolio Inquiry: ${subject}`;
+    const composeBody =
+      `Name: ${name}\n` +
+      `Email: ${email}\n\n` +
+      `${errorMessage}\n\n` +
+      `Project brief:\n${messageEl.value.trim()}`;
+    const gmailComposeUrl =
+      `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(CONTACT_EMAIL)}` +
+      `&su=${encodeURIComponent(composeSubject)}` +
+      `&body=${encodeURIComponent(composeBody)}`;
+
+    statusEl.textContent = `${errorMessage} `;
+    const link = document.createElement("a");
+    link.href = gmailComposeUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Open Gmail draft";
+    statusEl.appendChild(link);
+    statusEl.className = "form-status error";
+  };
+
   const name = nameEl.value.trim();
   const email = emailEl.value.trim();
   const subject = subjectEl.value.trim();
   const message = messageEl.value.trim();
 
   if (!name || !email || !subject || !message) {
-    statusEl.textContent = "Please fill in all fields before sending.";
-    statusEl.className = "form-status error";
+    setStatus("Please fill in all fields before sending.", "error");
     return;
   }
 
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    statusEl.textContent = "Please enter a valid email address.";
-    statusEl.className = "form-status error";
+    setStatus("Please enter a valid email address.", "error");
     return;
   }
 
-  statusEl.textContent = "Sending from browser...";
-  statusEl.className = "form-status";
+  setStatus("Sending from browser...");
   const previousBtnText = sendBtn.textContent;
   sendBtn.textContent = "Sending...";
   sendBtn.disabled = true;
 
   try {
-    const response = await fetch(FORMSUBMIT_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      },
-      body: JSON.stringify({
-        name,
-        email,
-        subject,
-        message,
-        _subject: `Portfolio Lead: ${subject}`,
-        _template: "table",
-        _captcha: "false"
-      })
-    });
+    const payload = {
+      name,
+      email,
+      subject,
+      message,
+      _subject: `Portfolio Lead: ${subject}`,
+      _template: "table",
+      _captcha: "false"
+    };
 
-    const result = await response.json().catch(() => null);
-    const submissionSucceeded =
-      response.ok && result && (result.success === true || result.success === "true");
+    let submissionSucceeded = false;
+    let lastApiMessage = "";
+
+    for (const endpoint of FORMSUBMIT_ENDPOINTS) {
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json().catch(() => null);
+        submissionSucceeded =
+          response.ok && result && (result.success === true || result.success === "true");
+
+        if (submissionSucceeded) {
+          break;
+        }
+
+        const apiMessage = typeof result?.message === "string" ? result.message : "";
+        if (apiMessage) {
+          lastApiMessage = apiMessage;
+        }
+      } catch (_submitError) {
+        // Try next endpoint before showing fallback.
+      }
+    }
 
     if (submissionSucceeded) {
-      statusEl.textContent = "Message sent successfully. I will get back to you soon.";
-      statusEl.className = "form-status success";
+      setStatus("Message sent successfully. I will get back to you soon.", "success");
       nameEl.value = "";
       emailEl.value = "";
       subjectEl.value = "";
       messageEl.value = "";
     } else {
-      const apiMessage = typeof result?.message === "string" ? result.message : "";
-      const needsActivation = /activation/i.test(apiMessage);
-      const needsServer = /web server|browsed as html files|file:\/\//i.test(apiMessage);
+      const needsActivation = /activation/i.test(lastApiMessage);
+      const needsServer = /web server|browsed as html files|file:\/\//i.test(lastApiMessage);
 
       if (needsActivation) {
-        statusEl.textContent =
-          "Activation pending: open the latest FormSubmit email and click its 'Activate Form' button (do not manually use /confirm URL), then submit again.";
+        setStatusWithGmailFallback(
+          "Activation pending in FormSubmit. Check the activation mail and click 'Activate Form' from that email."
+        );
       } else if (needsServer) {
-        statusEl.textContent =
-          "Run the portfolio through a local web server URL (for example http://127.0.0.1:5500), then submit again.";
-      } else if (apiMessage) {
-        statusEl.textContent = apiMessage;
+        setStatusWithGmailFallback(
+          "Submit from a hosted URL or local server URL (not file://)."
+        );
+      } else if (lastApiMessage) {
+        setStatusWithGmailFallback(lastApiMessage);
       } else {
-        statusEl.textContent =
-          "Could not send right now. Please try again or email alby.u.tomy@gmail.com directly.";
+        setStatusWithGmailFallback("Could not send right now.");
       }
-      statusEl.className = "form-status error";
     }
   } catch (_error) {
-    statusEl.textContent =
-      "Could not send right now. Please try again or email alby.u.tomy@gmail.com directly.";
-    statusEl.className = "form-status error";
+    setStatusWithGmailFallback("Could not send right now.");
   } finally {
     sendBtn.disabled = false;
     sendBtn.textContent = previousBtnText;

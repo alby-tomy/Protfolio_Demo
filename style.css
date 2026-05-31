@@ -1870,6 +1870,26 @@ h1 {
   background: var(--input-bg);
 }
 
+.contact-form input:-webkit-autofill,
+.contact-form input:-webkit-autofill:hover,
+.contact-form input:-webkit-autofill:focus,
+.contact-form textarea:-webkit-autofill,
+.contact-form textarea:-webkit-autofill:hover,
+.contact-form textarea:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--ink) !important;
+  caret-color: var(--ink);
+  border: 1px solid var(--line);
+  -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+  box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+  transition: background-color 99999s ease-in-out 0s;
+}
+
+.contact-form input:-moz-autofill,
+.contact-form textarea:-moz-autofill {
+  color: var(--ink);
+  box-shadow: 0 0 0 1000px var(--input-bg) inset;
+}
+
 .contact-form textarea {
   min-height: 146px;
   resize: vertical;
@@ -1894,6 +1914,15 @@ h1 {
 
 .form-status.error {
   color: #b3422c;
+}
+
+.form-status a {
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
+.form-status a:hover {
+  color: var(--accent);
 }
 
 .site-footer {
