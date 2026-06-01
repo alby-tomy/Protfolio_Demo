@@ -5,10 +5,7 @@ const themeButtons = document.querySelectorAll("[data-theme-btn]");
 const THEME_KEY = "portfolio-theme";
 const VALID_THEMES = new Set(["light", "dark", "cyber"]);
 const CONTACT_EMAIL = "alby.u.tomy@gmail.com";
-const FORMSUBMIT_ENDPOINTS = [
-  "https://formsubmit.co/ajax/036b2b909bb3489467da6984534bbdc4",
-  `https://formsubmit.co/ajax/${CONTACT_EMAIL}`
-];
+const FORMSUBMIT_FORM_ENDPOINT = "https://formsubmit.co/036b2b909bb3489467da6984534bbdc4";
 
 function applyTheme(theme, persist = true) {
   const activeTheme = VALID_THEMES.has(theme) ? theme : "light";
@@ -214,6 +211,20 @@ async function sendMail(event) {
     event.preventDefault();
   }
 
+  const submitTraceId = `lead-${Date.now()}`;
+  const logSubmitFlow = (stage, details = {}) => {
+    const stamp = new Date().toISOString();
+    console.log(`[contact-submit][${submitTraceId}][${stamp}] ${stage}`, details);
+  };
+
+  const maskEmail = (value) => {
+    const atIndex = value.indexOf("@");
+    if (atIndex <= 1) {
+      return value;
+    }
+    return `${value[0]}***${value.slice(atIndex - 1)}`;
+  };
+
   const nameEl = document.getElementById("f-name");
   const emailEl = document.getElementById("f-email");
   const subjectEl = document.getElementById("f-subject");
@@ -221,57 +232,40 @@ async function sendMail(event) {
   const statusEl = document.getElementById("form-status");
   const sendBtn = document.getElementById("btn-send");
 
+  if (!nameEl || !emailEl || !subjectEl || !messageEl || !statusEl || !sendBtn) {
+    logSubmitFlow("missing-dom-elements", {
+      nameEl: Boolean(nameEl),
+      emailEl: Boolean(emailEl),
+      subjectEl: Boolean(subjectEl),
+      messageEl: Boolean(messageEl),
+      statusEl: Boolean(statusEl),
+      sendBtn: Boolean(sendBtn)
+    });
+    return;
+  }
+
   const setStatus = (message, type = "") => {
     statusEl.textContent = message;
     statusEl.className = type ? `form-status ${type}` : "form-status";
   };
 
-  const submitViaHiddenFormTarget = (payload) => {
-    let iframe = null;
-    let form = null;
+  const submitViaNoCors = async (payloadData) => {
+    const encodedPayload = new URLSearchParams(payloadData).toString();
+    logSubmitFlow("formsubmit-nocors-start", {
+      endpoint: FORMSUBMIT_FORM_ENDPOINT,
+      payloadBytes: encodedPayload.length
+    });
 
-    try {
-      const iframeName = `contact-submit-${Date.now()}`;
-      iframe = document.createElement("iframe");
-      iframe.name = iframeName;
-      iframe.tabIndex = -1;
-      iframe.setAttribute("aria-hidden", "true");
-      iframe.style.display = "none";
+    await fetch(FORMSUBMIT_FORM_ENDPOINT, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: encodedPayload
+    });
 
-      form = document.createElement("form");
-      form.method = "POST";
-      form.action = `https://formsubmit.co/${CONTACT_EMAIL}`;
-      form.target = iframeName;
-      form.style.display = "none";
-
-      const formPayload = {
-        ...payload,
-        _next: window.location.href.split("#")[0]
-      };
-
-      Object.entries(formPayload).forEach(([key, value]) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = key;
-        input.value = String(value);
-        form.appendChild(input);
-      });
-
-      document.body.appendChild(iframe);
-      document.body.appendChild(form);
-      form.submit();
-
-      window.setTimeout(() => {
-        form?.remove();
-        iframe?.remove();
-      }, 2500);
-
-      return true;
-    } catch (_hiddenSubmitError) {
-      form?.remove();
-      iframe?.remove();
-      return false;
-    }
+    logSubmitFlow("formsubmit-nocors-dispatched");
   };
 
   const name = nameEl.value.trim();
@@ -279,104 +273,58 @@ async function sendMail(event) {
   const subject = subjectEl.value.trim();
   const message = messageEl.value.trim();
 
+  logSubmitFlow("submit-started", {
+    nameLength: name.length,
+    emailMasked: maskEmail(email),
+    subjectLength: subject.length,
+    messageLength: message.length
+  });
+
   if (!name || !email || !subject || !message) {
+    logSubmitFlow("validation-failed", { reason: "missing-required-fields" });
     setStatus("Please fill in all fields before sending.", "error");
     return;
   }
 
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    logSubmitFlow("validation-failed", { reason: "invalid-email-format", emailMasked: maskEmail(email) });
     setStatus("Please enter a valid email address.", "error");
     return;
   }
 
-  setStatus("Sending from browser...");
+  setStatus("Submitting...");
   const previousBtnText = sendBtn.textContent;
-  sendBtn.textContent = "Sending...";
+  sendBtn.textContent = "Submitting...";
   sendBtn.disabled = true;
 
   try {
-    const payload = {
+    const payloadData = {
       name,
       email,
       subject,
       message,
       _subject: `Portfolio Lead: ${subject}`,
       _template: "table",
-      _captcha: "false"
+      _captcha: "false",
+      _replyto: email
     };
-
-    let submissionSucceeded = false;
-    let lastApiMessage = "";
-
-    for (const endpoint of FORMSUBMIT_ENDPOINTS) {
-      try {
-        const response = await fetch(endpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json"
-          },
-          body: JSON.stringify(payload)
-        });
-
-        const result = await response.json().catch(() => null);
-        submissionSucceeded =
-          response.ok && result && (result.success === true || result.success === "true");
-
-        if (submissionSucceeded) {
-          break;
-        }
-
-        const apiMessage = typeof result?.message === "string" ? result.message : "";
-        if (apiMessage) {
-          lastApiMessage = apiMessage;
-        }
-      } catch (_submitError) {
-        // Try next endpoint before showing fallback.
-      }
-    }
-
-    if (submissionSucceeded) {
-      setStatus("Message sent successfully. I will get back to you soon.", "success");
-      nameEl.value = "";
-      emailEl.value = "";
-      subjectEl.value = "";
-      messageEl.value = "";
-    } else {
-      const hiddenFormSubmitted = submitViaHiddenFormTarget(payload);
-
-      if (hiddenFormSubmitted) {
-        setStatus("Submitted from browser. I will get back to you soon.", "success");
-        nameEl.value = "";
-        emailEl.value = "";
-        subjectEl.value = "";
-        messageEl.value = "";
-      } else {
-        const needsActivation = /activation/i.test(lastApiMessage);
-        const needsServer = /web server|browsed as html files|file:\/\//i.test(lastApiMessage);
-
-        if (needsActivation) {
-          setStatus(
-            "FormSubmit activation is pending. Open the activation email from FormSubmit and click 'Activate Form', then submit again.",
-            "error"
-          );
-        } else if (needsServer) {
-          setStatus(
-            "Use a hosted URL or local server URL (not file://), then submit again.",
-            "error"
-          );
-        } else if (lastApiMessage) {
-          setStatus(lastApiMessage, "error");
-        } else {
-          setStatus("Could not send right now. Please try again in a minute.", "error");
-        }
-      }
-    }
-  } catch (_error) {
-    setStatus("Could not send right now. Please try again in a minute.", "error");
+    await submitViaNoCors(payloadData);
+    setStatus("Enquiry submitted.", "success");
+    nameEl.value = "";
+    emailEl.value = "";
+    subjectEl.value = "";
+    messageEl.value = "";
+  } catch (error) {
+    logSubmitFlow("submit-unhandled-error", {
+      error: error instanceof Error ? error.message : String(error)
+    });
+    setStatus("Could not submit right now. Please try again.", "error");
   } finally {
     sendBtn.disabled = false;
     sendBtn.textContent = previousBtnText;
+    logSubmitFlow("submit-finished", {
+      buttonDisabled: sendBtn.disabled
+    });
   }
 }
 
