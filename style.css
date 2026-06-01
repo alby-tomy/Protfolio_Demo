@@ -1982,6 +1982,14 @@ h1 {
     grid-template-columns: 1fr;
   }
 
+  .hero-profile {
+    order: 1;
+  }
+
+  .hero-copy {
+    order: 2;
+  }
+
   .hero {
     padding-top: 40px;
   }
