@@ -1901,6 +1901,18 @@ h1 {
   border-color: rgba(15, 122, 108, 0.45);
 }
 
+.contact-form input.field-invalid,
+.contact-form textarea.field-invalid {
+  border-color: #b3422c;
+  box-shadow: 0 0 0 1px rgba(179, 66, 44, 0.35);
+}
+
+.contact-form input.field-invalid:focus-visible,
+.contact-form textarea.field-invalid:focus-visible {
+  outline-color: rgba(179, 66, 44, 0.35);
+  border-color: #b3422c;
+}
+
 .form-status {
   min-height: 24px;
   font-size: 0.88rem;

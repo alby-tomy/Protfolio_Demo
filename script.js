@@ -6,6 +6,16 @@ const THEME_KEY = "portfolio-theme";
 const VALID_THEMES = new Set(["light", "dark", "cyber"]);
 const CONTACT_EMAIL = "alby.u.tomy@gmail.com";
 const FORMSUBMIT_FORM_ENDPOINT = "https://formsubmit.co/036b2b909bb3489467da6984534bbdc4";
+const EMAIL_REGEX =
+  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+
+function setFieldValidity(field, isValid) {
+  if (!field) {
+    return;
+  }
+  field.classList.toggle("field-invalid", !isValid);
+  field.setAttribute("aria-invalid", isValid ? "false" : "true");
+}
 
 function applyTheme(theme, persist = true) {
   const activeTheme = VALID_THEMES.has(theme) ? theme : "light";
@@ -144,6 +154,25 @@ if (navToggle && navLinks) {
 
 const serviceLinks = document.querySelectorAll(".service-link");
 const subjectInput = document.getElementById("f-subject");
+const emailInput = document.getElementById("f-email");
+
+if (emailInput) {
+  const validateEmailLive = () => {
+    const value = emailInput.value.trim();
+    if (!value) {
+      setFieldValidity(emailInput, true);
+      return;
+    }
+    setFieldValidity(emailInput, EMAIL_REGEX.test(value));
+  };
+
+  emailInput.addEventListener("blur", validateEmailLive);
+  emailInput.addEventListener("input", () => {
+    if (emailInput.classList.contains("field-invalid")) {
+      validateEmailLive();
+    }
+  });
+}
 
 serviceLinks.forEach((link) => {
   link.addEventListener("click", () => {
@@ -280,17 +309,29 @@ async function sendMail(event) {
     messageLength: message.length
   });
 
-  if (!name || !email || !subject || !message) {
+  if (!name || !subject || !message) {
     logSubmitFlow("validation-failed", { reason: "missing-required-fields" });
     setStatus("Please fill in all fields before sending.", "error");
     return;
   }
 
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    logSubmitFlow("validation-failed", { reason: "invalid-email-format", emailMasked: maskEmail(email) });
-    setStatus("Please enter a valid email address.", "error");
+  if (!email) {
+    logSubmitFlow("validation-failed", { reason: "missing-email" });
+    setStatus("Please enter your email id.", "error");
+    setFieldValidity(emailEl, false);
+    emailEl.focus();
     return;
   }
+
+  if (!EMAIL_REGEX.test(email)) {
+    logSubmitFlow("validation-failed", { reason: "invalid-email-format", emailMasked: maskEmail(email) });
+    setStatus("That email id looks invalid. Please enter a valid email id, e.g. name@example.com.", "error");
+    setFieldValidity(emailEl, false);
+    emailEl.focus();
+    return;
+  }
+
+  setFieldValidity(emailEl, true);
 
   setStatus("Submitting...");
   const previousBtnText = sendBtn.textContent;
@@ -314,6 +355,7 @@ async function sendMail(event) {
     emailEl.value = "";
     subjectEl.value = "";
     messageEl.value = "";
+    setFieldValidity(emailEl, true);
   } catch (error) {
     logSubmitFlow("submit-unhandled-error", {
       error: error instanceof Error ? error.message : String(error)
